@@ -1,0 +1,66 @@
+# ===== Secretos y certificados (NUNCA subir) =====
+.env
+.env.*
+!.env.example
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.pem
+*.key
+
+# ===== Archivos subidos / datos locales =====
+/data/
+/archivos/
+/uploads/
+*.dump
+*.sql.gz
+infra/respaldos/*
+!infra/respaldos/.gitkeep
+
+# ===== Java / Maven / Gradle =====
+target/
+!.mvn/wrapper/maven-wrapper.jar
+.gradle/
+build/
+*.class
+*.log
+*.jar
+*.war
+hs_err_pid*
+
+# ===== Node / React / Vite =====
+node_modules/
+dist/
+.vite/
+coverage/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.tsbuildinfo
+
+# ===== IDEs =====
+.idea/
+*.iml
+*.iws
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.classpath
+.project
+.settings/
+.factorypath
+
+# ===== Sistema operativo =====
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===== Docker local =====
+docker-compose.override.yml
+
+# ===== Temporales =====
+*.tmp
+*.swp
+*.bak

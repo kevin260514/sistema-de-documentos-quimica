@@ -1,0 +1,19 @@
+# Normaliza los finales de linea entre Windows y Linux/Docker
+* text=auto eol=lf
+
+# Archivos de Windows que deben conservar CRLF
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# Binarios
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.jar binary
+*.woff binary
+*.woff2 binary

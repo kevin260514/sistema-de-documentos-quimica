@@ -1,0 +1,65 @@
+# Arranque completo del sistema:
+#   docker compose up --build                 (db + backend + frontend)
+#   docker compose --profile dev up --build   (ademas Mailpit, para ver los correos en desarrollo)
+# Requiere un archivo .env (copiar de .env.example).
+name: pasantias-fq
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME:?Falta DB_NAME en el archivo .env}
+      POSTGRES_USER: ${DB_USER:?Falta DB_USER en el archivo .env}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Falta DB_PASSWORD en el archivo .env}
+      TZ: ${TZ:-America/Guayaquil}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:5432:5432"      # solo accesible desde este equipo (IntelliJ, DBeaver)
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET:?Falta JWT_SECRET en el archivo .env}
+      JWT_EXPIRACION_MINUTOS: ${JWT_EXPIRACION_MINUTOS:-60}
+      STORAGE_PATH: ${STORAGE_PATH:-/data/archivos}
+      MAX_ARCHIVO_MB: ${MAX_ARCHIVO_MB:-10}
+      MAIL_HOST: ${MAIL_HOST:-mailpit}
+      MAIL_PORT: ${MAIL_PORT:-1025}
+      MAIL_USER: ${MAIL_USER:-}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+      TZ: ${TZ:-America/Guayaquil}
+    volumes:
+      - archivos:/data/archivos
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build: ./frontend
+    restart: unless-stopped
+    ports:
+      - "${HTTP_PORT:-80}:80"
+    depends_on:
+      - backend
+
+  mailpit:
+    image: axllent/mailpit:latest
+    profiles: ["dev"]
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8025:8025"      # bandeja de correos de prueba: http://localhost:8025
+
+volumes:
+  pgdata:
+  archivos:
