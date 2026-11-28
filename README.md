@@ -1,8 +1,8 @@
 # Sistema de Gestion de Pasantias - Facultad de Quimica (UCE)
 
-Sistema web para digitalizar el tramite de pasantias de la Facultad de Quimica de la Universidad Central del Ecuador: desde la solicitud del estudiante hasta el aval firmado electronicamente por el subdecano.
+Sistema web para digitalizar el tramite de pasantias de la Facultad de Quimica de la Universidad Central del Ecuador: desde la solicitud del estudiante hasta el aval firmado de forma manuscrita y digitalizado por el subdecano.
 
-> Estado: **Fase 1 en desarrollo** (solo pasantias).
+> Estado: **Línea base MVP v1.2 (Sprint 0)**. La implementación y los controles de producción están pendientes de verificación.
 
 ## Flujo general
 
@@ -10,18 +10,18 @@ Sistema web para digitalizar el tramite de pasantias de la Facultad de Quimica d
 2. El secretario la revisa y la aprueba u observa.
 3. El estudiante realiza la pasantia y sube las evidencias.
 4. El secretario revisa las evidencias y genera el aval en PDF.
-5. El subdecano firma el aval con su certificado `.p12` (PAdES).
+5. El subdecano (o suplente vigente) imprime, firma a mano y carga el aval escaneado. PAdES queda para Fase 2.
 6. El estudiante descarga el aval firmado.
 
 ## Roles
 
-Estudiante, Secretario, Subdecano y Administrador.
+Estudiante, Secretario, Subdecano y Administrador; suplencias temporales de Secretaría y Subdecanato.
 
 ## Tecnologias
 
 | Capa | Tecnologia |
 |---|---|
-| Backend | Java 21, Spring Boot 3, Spring Security + JWT, Spring Data JPA, Flyway |
+| Backend | Java 21, Spring Boot 4.x (según pom.xml), Spring Security + JWT, Spring Data JPA, Flyway |
 | Firma y PDF | Apache PDFBox, BouncyCastle, Thymeleaf + OpenHTMLtoPDF |
 | Frontend | React + TypeScript (Vite), React Router, TanStack Query |
 | Base de datos | PostgreSQL 16 |
@@ -62,7 +62,7 @@ cp .env.example .env      # en PowerShell: Copy-Item .env.example .env
 docker compose up --build
 ```
 
-El sistema quedara disponible en `http://localhost`.
+La configuración actual es de desarrollo HTTP. El MVP exige HTTPS en red local; no usar datos reales hasta acreditar los controles de despliegue.
 
 ## Documentacion
 
@@ -78,7 +78,7 @@ Lee [CONTRIBUTING.md](CONTRIBUTING.md) antes de hacer tu primer commit.
 ## Seguridad
 
 - Nunca subir `.env`, claves ni archivos `.p12`.
-- La clave del certificado de firma nunca se guarda: se pide en cada firma.
+- La firma electrónica PAdES se difiere a Fase 2. No almacenar claves privadas en la aplicación.
 
 ## Equipo
 
@@ -88,3 +88,11 @@ Lee [CONTRIBUTING.md](CONTRIBUTING.md) antes de hacer tu primer commit.
 ## Licencia
 
 _Por definir con la facultad._
+
+## Línea base v1.2
+
+- MVP local con HTTPS, firma manuscrita escaneada, RBAC, auditoría append-only y respaldos cifrados.
+- Dos máquinas de estados: trámite (T-01 a T-19) y aval (A-01 a A-05).
+- Los parámetros institucionales son configurables y requieren validación antes del piloto.
+- IA, acceso externo y firma PAdES quedan fuera del MVP.
+- [Auditoría y plan de sincronización](docs/auditoria-mvp-v1.2.md).

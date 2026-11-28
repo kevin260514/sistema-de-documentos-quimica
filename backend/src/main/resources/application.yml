@@ -55,10 +55,9 @@ springdoc:
 
 app:
   jwt:
-    # En Docker este valor viene del archivo .env (JWT_SECRET). El valor por
-    # defecto solo sirve para desarrollo local; nunca usarlo en produccion.
-    secret: ${JWT_SECRET:solo-para-desarrollo-local-cambiar-0123456789abcdef}
-    expiracion-minutos: ${JWT_EXPIRACION_MINUTOS:60}
+    # Obligatorio también en desarrollo; sin secreto de respaldo.
+    secret: ${JWT_SECRET}
+    expiracion-minutos: ${JWT_EXPIRACION_MINUTOS:15}
   storage:
     path: ${STORAGE_PATH:./data/archivos}
     max-archivo-mb: ${MAX_ARCHIVO_MB:10}
